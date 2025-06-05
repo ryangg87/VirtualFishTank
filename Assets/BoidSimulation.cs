@@ -80,9 +80,10 @@ public class BoidSimulationControl : MonoBehaviour
 
     public void Update()
     {
-        /*
-        // if (Input.GetButton(1)) ;
+        
+       if(controlMode==ControlMode.seek)
         {
+            
             for (int i = 0; i < numBoidsTospawn; i++)
             {
                 Vector3 accel = boids[i].seek(targetObject.transform.position, boids[i].acclmax);
@@ -100,18 +101,41 @@ public class BoidSimulationControl : MonoBehaviour
                 {
                     boids[i].ri.linearVelocity -= accel * Time.fixedDeltaTime;
                     Debug.DrawRay(boids[i].transform.position, accel, Color.green);
+                 //Debug.DrawRay(boids[i].transform.position, , Color.red);
 
                 }
 
 
 
             }
+            
         }
 
+        if (Input.GetMouseButton(0) && controlMode == ControlMode.food)
+        {
 
-        */
-        //if (purse == true)
-        
+            Spawnfood();
+        }
+
+        for (int i = 0; i < numBoidsTospawn; i++)
+        {
+
+            float foodseekraduis = 0.5f;
+            Collider[] colliders = Physics.OverlapSphere(boids[i].transform.position, foodseekraduis);
+            foreach(Collider collider in colliders)
+            {
+
+                Food food = collider.GetComponent<Food>();
+                Vector3 accel = boids[i].seek(collider.transform.position, boids[i].acclmax);
+                boids[i].ri.linearVelocity += accel * Time.fixedDeltaTime;
+                 
+                
+            }
+        }
+
+            //if (purse == true)
+            if (controlMode == ControlMode.pursue)
+        {
 
             for (int i = 0; i < numBoidsTospawn; i++)
             {
@@ -134,8 +158,8 @@ public class BoidSimulationControl : MonoBehaviour
                 }
 
             }
-        
 
+        }
              
 
             // float dt = Time.deltaTime;
@@ -174,5 +198,10 @@ public class BoidSimulationControl : MonoBehaviour
         
 
 
+    }
+
+    private void Spawnfood()
+    {
+        throw new System.NotImplementedException();
     }
 }

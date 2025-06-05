@@ -78,7 +78,7 @@ public class Boid : MonoBehaviour
         }
         asingtovolicity();
     }
-
+   
     internal Vector3 seek(Vector3 position)
     {
         throw new System.NotImplementedException();
