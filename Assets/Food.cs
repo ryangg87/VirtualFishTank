@@ -5,12 +5,15 @@ public class Food : MonoBehaviour
 
 
 
-    public GameObject foodPrefab;
-    GameObject targetObject;
-    private void Spawnfood()
-    {
-        Instantiate(foodPrefab, targetObject.transform.position, Random.rotation);
     
+    
+  public void Spawnfood()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if(Physics.Raycast(ray, out RaycastHit raycastHit))
+        {
+            Instantiate(gameObject, new Vector3(raycastHit.point.x, raycastHit.point.y, raycastHit.point.z), Quaternion.identity);
+        }
     }
 
 }

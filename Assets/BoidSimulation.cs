@@ -10,6 +10,8 @@ public class BoidSimulationControl : MonoBehaviour
     //public float acclmax = 5f;
     // public float linercolvity;
 
+
+
     public enum ControlMode
     {
 
@@ -22,6 +24,7 @@ public class BoidSimulationControl : MonoBehaviour
 
     public ControlMode controlMode = ControlMode.seek;
     public int controlModeInt = 0;
+    public Food foodprefab = null;
     public GameObject boidprefab = null;
     public int numBoidsTospawn = 10;
     public Boid[] boids = new Boid[10];
@@ -30,16 +33,17 @@ public class BoidSimulationControl : MonoBehaviour
     public void Start()
     {
         //
+        spawnfish();
 
         targetObject = GameObject.Find("target");
 
         //
 
 
-        boids = new Boid[10];
+        //boids = new Boid[10];
 
-
-        //
+/*
+        
         for (int i = 0; i < numBoidsTospawn; i++)
         {
             Vector3 position = new Vector3(Random.Range(-1.4f, 0.9f), Random.Range(0f, 1.4f), Random.Range(-0.9f, 0.9f));
@@ -53,8 +57,7 @@ public class BoidSimulationControl : MonoBehaviour
             boidcompent.acclmax = Random.Range(0.5f, 1.5f);
 
             boids[i] = boidcompent;
-        }
-
+        }*/
 
 
 
@@ -92,6 +95,7 @@ public class BoidSimulationControl : MonoBehaviour
                 {
                     boids[i].ri.linearVelocity += accel * Time.fixedDeltaTime;
                     Debug.DrawRay(boids[i].transform.position, accel, Color.green);
+                    Debug.DrawRay(boids[i].transform.position, boids[i].ri.linearVelocity, Color.red);
                 }
                 //  boids[i].ri.linearVelocity += accel * Time.fixedDeltaTime;
                 // Debug.DrawRay(boids[i].transform.position, accel, Color.green);
@@ -101,7 +105,8 @@ public class BoidSimulationControl : MonoBehaviour
                 {
                     boids[i].ri.linearVelocity -= accel * Time.fixedDeltaTime;
                     Debug.DrawRay(boids[i].transform.position, accel, Color.green);
-                 //Debug.DrawRay(boids[i].transform.position, , Color.red);
+                    Debug.DrawRay(boids[i].transform.position, boids[i].ri.linearVelocity, Color.red);
+                    //Debug.DrawRay(boids[i].transform.position, , Color.red);
 
                 }
 
@@ -110,31 +115,34 @@ public class BoidSimulationControl : MonoBehaviour
             }
             
         }
-
         if (Input.GetMouseButton(0) && controlMode == ControlMode.food)
         {
 
-            Spawnfood();
+            foodprefab.Spawnfood();
         }
 
-        for (int i = 0; i < numBoidsTospawn; i++)
+        if (Input.GetMouseButton(0) && controlMode == ControlMode.food)
         {
-
-            float foodseekraduis = 0.5f;
-            Collider[] colliders = Physics.OverlapSphere(boids[i].transform.position, foodseekraduis);
-            foreach(Collider collider in colliders)
+            for (int i = 0; i < numBoidsTospawn; i++)
             {
 
-                Food food = collider.GetComponent<Food>();
-                Vector3 accel = boids[i].seek(collider.transform.position, boids[i].acclmax);
-                boids[i].ri.linearVelocity += accel * Time.fixedDeltaTime;
-                 
-                
-            }
-        }
+                float foodseekraduis = 0.5f;
+                Collider[] colliders = Physics.OverlapSphere(boids[i].transform.position, foodseekraduis);
+                foreach(Collider collider in colliders)
+                {
 
-            //if (purse == true)
-            if (controlMode == ControlMode.pursue)
+                    Food food = collider.GetComponent<Food>();
+                    Vector3 accel = boids[i].seek(collider.transform.position, boids[i].acclmax);
+                    boids[i].ri.linearVelocity += accel * Time.fixedDeltaTime;
+
+
+                }
+            }
+            
+        }
+       
+        //if (purse == true)
+        if (controlMode == ControlMode.pursue)
         {
 
             for (int i = 0; i < numBoidsTospawn; i++)
@@ -145,6 +153,7 @@ public class BoidSimulationControl : MonoBehaviour
                 {
                     boids[i].ri.linearVelocity += accel * Time.fixedDeltaTime;
                     Debug.DrawRay(boids[i].transform.position, accel, Color.green);
+                    Debug.DrawRay(boids[i].transform.position, boids[i].ri.linearVelocity, Color.red);
                 }
                 //  boids[i].ri.linearVelocity += accel * Time.fixedDeltaTime;
                 // Debug.DrawRay(boids[i].transform.position, accel, Color.green);
@@ -154,6 +163,7 @@ public class BoidSimulationControl : MonoBehaviour
                 {
                     boids[i].ri.linearVelocity -= accel * Time.fixedDeltaTime;
                     Debug.DrawRay(boids[i].transform.position, accel, Color.green);
+                    Debug.DrawRay(boids[i].transform.position, boids[i].ri.linearVelocity, Color.red);
 
                 }
 
@@ -200,8 +210,26 @@ public class BoidSimulationControl : MonoBehaviour
 
     }
 
-    private void Spawnfood()
+    public void spawnfish()
     {
-        throw new System.NotImplementedException();
+        boids = new Boid[10];
+
+
+
+        for (int i = 0; i < numBoidsTospawn; i++)
+        {
+            Vector3 position = new Vector3(Random.Range(-1.4f, 0.9f), Random.Range(0f, 1.4f), Random.Range(-0.9f, 0.9f));
+            Quaternion rotation = Random.rotation;
+            GameObject spawndBoid = Instantiate(boidprefab, position, rotation);
+            spawndBoid.transform.localScale *= Random.Range(0.9f, 3f);
+            spawndBoid.GetComponent<Renderer>().material.SetColor("_basecolor", Random.ColorHSV(0, 1, 0.5f, 1, 0.5f, 1));
+
+            Boid boidcompent = spawndBoid.GetComponent<Boid>();
+            boidcompent.maxSpeed = Random.Range(0.5f, 1.5f);
+            boidcompent.acclmax = Random.Range(0.5f, 1.5f);
+
+            boids[i] = boidcompent;
+        }
+
     }
 }

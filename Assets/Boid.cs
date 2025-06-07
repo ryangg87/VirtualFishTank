@@ -16,7 +16,7 @@ public class Boid : MonoBehaviour
     private void Awake()
     {
 
-       ri = GetComponent<Rigidbody>();
+      ri = GetComponent<Rigidbody>();
        ri.linearVelocity = Random.insideUnitSphere;
         GetComponent<Renderer>().material.SetColor("_basecolor", Random.ColorHSV(0, 1, 0.5f, 1, 0.5f, 1));
 
@@ -72,9 +72,14 @@ public class Boid : MonoBehaviour
     public void FixedUpdate()
     {
         float speed = ri.linearVelocity.magnitude;
-        if(speed> maxSpeed)
+        float aclle = ri.linearVelocity.magnitude;
+        if (speed> maxSpeed)
         {
             ri.linearVelocity = ri.linearVelocity * maxSpeed / speed;
+        }
+        if ( aclle> acclmax)
+        {
+            ri.linearVelocity = ri.linearVelocity * acclmax / aclle;
         }
         asingtovolicity();
     }
