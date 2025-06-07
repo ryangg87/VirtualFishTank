@@ -271,6 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlMode: 0
   controlModeInt: 0
+  foodprefab: {fileID: 40056478595269440, guid: 5540831f9bd2a0444bc7c46becba06b7, type: 3}
   boidprefab: {fileID: 676342791721572840, guid: f897bb6f1e1ca6e488704ea6543a2907, type: 3}
   numBoidsTospawn: 10
   boids: []

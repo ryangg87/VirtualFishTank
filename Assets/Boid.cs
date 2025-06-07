@@ -32,10 +32,16 @@ public class Boid : MonoBehaviour
     public Vector3 seek(Vector3 target,float acceleration)
     {
 
-        
-        Vector3 toTarget = target - transform.position;
 
+
+        //taget is the postion of the mosue tranfor psot get the postion of the fish
+        //to toaget is the displamcet 
+
+        Vector3 toTarget = target - transform.position;
+        //to tgaget.
+        //sam vector but with a leanght of 1
         Vector3 totargetNormalized = toTarget.normalized;
+        //acle give the rate at what you acllrate actacion give mangutin .normald gie us driaction with out mangutes
         Vector3 accel = totargetNormalized * acceleration;
 
         return accel;
